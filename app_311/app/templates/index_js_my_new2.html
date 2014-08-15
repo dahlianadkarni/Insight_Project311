@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Predict311</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/starter-template.css" rel="stylesheet">
+
+	<script type="text/javascript">
+	
+	var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+	
+	function populatedropdown(dayfield, monthfield, yearfield){
+	var today=new Date()
+	var dayfield=document.getElementById(dayfield)
+	var monthfield=document.getElementById(monthfield)
+	var yearfield=document.getElementById(yearfield)
+	for (var i=0; i<31; i++)
+	dayfield.options[i]=new Option(i, i+1)
+	dayfield.options[today.getDate()]=new Option(today.getDate(), today.getDate(), true, true) //select today's day
+	for (var m=0; m<12; m++)
+	monthfield.options[m]=new Option(monthtext[m], monthtext[m])
+	monthfield.options[today.getMonth()]=new Option(monthtext[today.getMonth()], monthtext[today.getMonth()], true, true) //select today's month
+	var thisyear=today.getFullYear()
+	for (var y=0; y<20; y++){
+	yearfield.options[y]=new Option(thisyear, thisyear)
+	thisyear+=1
+	}
+	yearfield.options[0]=new Option(today.getFullYear(), today.getFullYear(), true, true) //select today's year
+	}
+
+</script>          
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/predict">Predict volumes</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>Predict complaint volume</h1>
+        <p class="lead"><br>Enter your borough, type of complaint and the start date<br>...</p>
+      </div>
+      
+
+
+		        
+<!--         <div id="the-basics" class="form-group"> -->
+<!--             <input class="form-control" type="text" name='borough_text' id='borough' size='60' placeholder="Enter your borough"> -->
+<!--    </div> -->
+
+        Enter your borough:
+		<form>
+    	<input type="radio" name="borough" value="BRONX"> BRONX<br>
+	    <input type="radio" name="borough" value="BROOKLYN"> BROOKLYN<br>
+	    <input type="radio" name="borough" value="MANHATTAN"> MANHATTAN<br>
+	    <input type="radio" name="borough" value="QUEENS"> QUEENS<br>
+	    <input type="radio" name="borough" value="STATEN ISLAND"> STATEN ISLAND<br>
+	    </form> 
+            
+<!-- 
+            <form name="borough_dropdown">
+		    <select name="menu" onChange="window.document.location.href=this.options[this.selectedIndex].value;" value="GO">
+			<option selected="selected">Select One</option>
+			<option value="">BRONX</option>
+			<option value="">BROOKLYN</option>
+			<option value="">MANHATTAN</option>
+			<option value="">QUEENS</option>
+			<option value="">STATEN ISLAND</option>
+		    </select>
+		    </form>
+ -->
+		      
+ <!-- 
+     <br>
+            <input class="form-control" type="text" name='period' id='period' size='60' placeholder="Enter period">
+	        (Last 6 months, Last 3 months)
+	        <form name="endStation">
+		    <select name="menu" onChange="window.document.location.href=this.options[this.selectedIndex].value;" value="GO">
+			<option selected="selected">Select One</option>
+			<option value="">Last 6 months</option>
+			<option value="">Last 3 months</option>
+		    </select>
+		    </form>  
+		    <br>
+ -->
+ <br><br>
+ 
+<!-- 
+        <div id="the-basics" class="form-group">
+            <input class="form-control" type="text" name='complaint_type' id='complaint_type' size='60' placeholder="Enter the type of complaint">		(Noise, HEATING)
+ -->
+         Enter resolution of complaint volumes:
+		<form>
+<!--     	<input type="radio" name="complaint_type" value="Noise - Street/Sidewalk"> Noise - Street/Sidewalk<br> -->
+    	<input type="radio" name="complaint_type" value="Noise"> Noise<br>
+    	<input type="radio" name="complaint_type" value="HEATING"> Heating<br>   	
+	    </form>        
+<!-- 
+	        <form name="complainttype">
+		    <select name="menu" onChange="window.document.location.href=this.options[this.selectedIndex].value;" value="GO">
+			<option selected="selected">Select One</option>
+			<option value="">Noise</option>
+			<option value="">Heating</option>
+		    </select>
+		    </form>  
+ -->
+
+<br><br>
+    
+		    Select start date:		    
+	<form action="" name="someform">
+	<select id="daydropdown">
+	</select> 
+	<select id="monthdropdown">
+	</select> 
+	<select id="yeardropdown">
+	</select> 
+	</form>
+	
+	<script type="text/javascript">
+	
+	//populatedropdown(id_of_day_select, id_of_month_select, id_of_year_select)
+	window.onload=function(){
+	populatedropdown("daydropdown", "monthdropdown", "yeardropdown")
+	}
+	</script>                
+
+        Enter resolution of complaint volumes:
+		<form>
+    	<input type="radio" name="resolution" value="W"> Weekly<br>
+    	<input type="radio" name="resolution" value="D"> Daily<br>   	
+	    </form> 
+ 
+		
+<!-- 
+	      <div>
+          <button class="btn btn-default" id="querymaker">Enter</button>
+      </div>
+ -->
+		
+      <div>
+<!-- 
+          <button class="btn btn-default" id="querymaker">Click to see expected complaint volumes versus actual complaint volumes</button>
+ -->
+          <button class="btn" id="querymaker">Click to see expected complaint volumes versus actual complaint volumes</button>
+      </div>
+
+     <div id="result_fig2">
+      </div>
+
+    </div><!-- /.container -->
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!--     <script src="static/js/jquery.js"></script> -->
+    <script src="static/js/bootstrap.min.js"></script>
+    <script>
+        var predict_complaint_volume = function() {
+            jQuery.ajax(
+            {
+            type: "GET",
+            url: "/db_json_echo2",
+            contentType: "application/json; charset=utf-8",
+            data: { borough: $('input[name="borough"]').val(),
+//                     period:  $('input[name="period"]').val(),
+                    complaint_type:  $('input[name="complaint_type"]').val(),
+                    },
+              success: function(data) {
+//                 $('#result_fig2').append('<img width=100 src="static/figs/histcomplaints.png">');
+
+                result_image = data.image;
+                $("#result_fig2").append("<img src=\"data:image/png;base64," + result_image + "\" height=\"412\" align=\"middle\">");
+              }
+            })
+        }
+        $(document).ready(function() {
+            $('#querymaker').click(predict_complaint_volume);
+            }
+        )
+        
+        
+    </script>
+  </body>
+</html>
