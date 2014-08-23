@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Locality Lookout</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/starter-template.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+       
+  <body>
+<!-- 
+    <style type="text/css">
+      body { background-image: url(static/figs/NoiseStudy_small.jpg);
+        background-size: 1500px 900px;
+/*       background-repeat:no-repeatdisplay:compact; */
+      }
+    </style>
+ -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+<!--           <a class="brand" ><img STYLE="position:absolute; TOP:115px; LEFT:50px; WIDTH:220px; HEIGHT:35px" src="/static/figs/311pic.jpg" ></a> -->
+
+
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+<!--           <a class="navbar-brand" href="#">Locality Lookout</a> -->
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/predict">Predict volumes</a></li>
+            <li><a href="/visualize">Visualize</a></li>
+            <li><a href="https://sites.google.com/site/dahlianadkarni/">About me</a></li>
+<!--             <li><a href="#contact">Contact</a></li> -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>Identifying high-priority complaints in your area</h1>
+        <p class="lead"><br>...</p>
+      </div>
+
+      <div>
+          <form class="navbar-form text-center" action="/visualize_result" method="GET">
+            Enter your Complaint Type:<br><br>
+            <input class="form-control" type="text" name="complaint_type" id='complaint_type' size='60' placeholder="Enter complaint">
+<!--             <input type="text" name="ID" placeholder="e.g. 47377"> -->
+       <br><br>
+       Pick time period to focus on:<br>
+<!-- 		<form> -->
+    	<input type="radio" name="period" value="1"> Last month<br>
+	    <input type="radio" name="period" value="3"> Last 3 months<br><br>
+<!-- <!~~ 	    <input type="radio" name="period" value="6"> Last 6 months<br> ~~> -->
+<!-- <!~~ 	    <input type="radio" name="period" value="12"> Last year<br> ~~> -->
+<!-- 	    </form>             
+<br><br> -->
+            <button type="submit" class="btn btn-small btn-warning ">View top complaints by priority
+            </button>
+            <br>
+<!--             <input class="form-control" type="text" name='borough_text' id='borough' size='60' placeholder="Enter your borough"> -->
+<!--             <br> -->
+<!--             <button type="submit" class="btn" id="submit">View top complaints</button> -->
+          </form>
+
+<!-- 
+          <form class="navbar-form text-center" action="/seeall" method="GET">
+            <button type="submit" class="btn btn">SEE ALL ANIMALS
+            </button>                  
+          </form>  
+ -->  
+            <br>
+      </div>
+      
+
+      <div id="top_complaints_table">
+          <!-- <strong><div id='echoResult'></div></strong> -->
+          <table class="table table-hover">
+          </table>
+      </div>      
+
+      <div id="result_fig">
+      </div>
+
+    </div><!-- /.container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!--     <script src="static/js/jquery.js"></script> -->
+    <script src="static/js/bootstrap.min.js"></script>
+<!-- 
+    <script>
+        var view_hist = function(data) {
+//             $('#result_fig0').append('<img width=100 src="static/figs/histcomplaints.png">');
+            topcomplaints=[];
+            jQuery.ajax(
+//             'db_json_echo',
+            {
+            type: "GET",
+            url: "/db_json_echo",
+            contentType: "application/json; charset=utf-8",
+            data: { borough: $('input[name="borough"]').val(),
+                    period:  $('input[name="period"]').val()
+                    },
+              success: function(data) {
+                result_image = data.image;
+//                 $("#result_fig").remove();
+                $("#result_fig").append("<img src=\"data:image/png;base64," + result_image + "\" height=\"412\" align=\"middle\">");
+
+                topcomplaints = data.topcomplaints;
+                $("#top_complaints_table tr").remove();
+                $("#top_complaints_table table").append('<tr><th>Complaint Type</th><th>Count</th></tr>')
+//                 for (i=0; i < topcomplaints.length; i++) {
+                for (i=0; i < 10; i++) {
+                  $("#top_complaints_table table").append('<tr><td>' +  topcomplaints[i]['complaint_type']+'</td><td>' + topcomplaints[i]['counts']+' </td> </tr>');
+                }
+              }
+            })
+        }
+
+        $(document).ready(function() {
+            $('#submit').click(view_hist);
+            }
+        )
+        
+        
+    </script>
+  </body>
+</html>
+ -->
+
+
+<!-- 
+       Pick your borough:
+		<form>
+	    <input type="radio" name="borough" value="BROOKLYN"> BROOKLYN<br>
+    	<input type="radio" name="borough" value="BRONX"> BRONX<br>
+	    <input type="radio" name="borough" value="MANHATTAN"> MANHATTAN<br>
+	    <input type="radio" name="borough" value="QUEENS"> QUEENS<br>
+	    <input type="radio" name="borough" value="STATEN ISLAND"> STATEN ISLAND<br>
+	    </form> 
+ -->
+            
+<!-- 
+            <form name="borough_dropdown">
+		    <select name="menu" onChange="window.document.location.href=this.options[this.selectedIndex].value;" value="GO">
+			<option selected="selected">Select One</option>
+			<option value="">BRONX</option>
+			<option value="">BROOKLYN</option>
+			<option value="">MANHATTAN</option>
+			<option value="">QUEENS</option>
+			<option value="">STATEN ISLAND</option>
+		    </select>
+		    </form>
+ -->
+		      
+ <!-- 
+     <br>
+            <input class="form-control" type="text" name='period' id='period' size='60' placeholder="Enter period">
+	        (Last 6 months, Last 3 months)
+	        <form name="endStation">
+		    <select name="menu" onChange="window.document.location.href=this.options[this.selectedIndex].value;" value="GO">
+			<option selected="selected">Select One</option>
+			<option value="">Last 6 months</option>
+			<option value="">Last 3 months</option>
+		    </select>
+		    </form>  
+		    <br>
+ -->
+
+<!-- 
+<br><br>
+       Pick time period to focus on:
+		<form>
+    	<input type="radio" name="period" value="1"> Last month<br>
+	    <input type="radio" name="period" value="2"> Last 2 months<br>
+	    <input type="radio" name="period" value="3"> Last 3 months<br>
+<!~~ 	    <input type="radio" name="period" value="6"> Last 6 months<br> ~~>
+<!~~ 	    <input type="radio" name="period" value="12"> Last year<br> ~~>
+	    </form> 
+<br>
+ -->
+<!-- 
+	OR
+	<br><br>
+	Select start date:		    
+	<form action="" name="someform">
+	<select id="daydropdown">
+	</select> 
+	<select id="monthdropdown">
+	</select> 
+	<select id="yeardropdown">
+	</select> 
+	</form>	
+	<script type="text/javascript">
+	//populatedropdown(id_of_day_select, id_of_month_select, id_of_year_select)
+	window.onload=function(){
+	populatedropdown("daydropdown", "monthdropdown", "yeardropdown")
+	}
+	</script>   
+ -->             

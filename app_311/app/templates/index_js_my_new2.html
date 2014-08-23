@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Predict311</title>
+    <title>Locality Lookout</title>
 
     <!-- Bootstrap core CSS -->
     <link href="static/css/bootstrap.css" rel="stylesheet">
@@ -58,14 +58,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Locality Lookout</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="/">Home</a></li>
             <li><a href="/predict">Predict volumes</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+<!--             <li><a href="#about">About</a></li> -->
+<!--             <li><a href="#contact">Contact</a></li> -->
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -74,7 +74,7 @@
     <div class="container">
 
       <div class="starter-template">
-        <h1>Predict complaint volume</h1>
+        <h1>Predict incoming complaint volume</h1>
         <p class="lead"><br>Enter your borough, type of complaint and the start date<br>...</p>
       </div>
       
@@ -182,9 +182,13 @@
           <button class="btn" id="querymaker">Click to see expected complaint volumes versus actual complaint volumes</button>
       </div>
 
+<!-- 
      <div id="result_fig2">
       </div>
-
+ -->
+      <div id="predictbox">
+          <p>Expected complaints</p>
+      </div>
     </div><!-- /.container -->
 
 
@@ -208,10 +212,14 @@
                     complaint_type:  $('input[name="complaint_type"]').val(),
                     },
               success: function(data) {
-//                 $('#result_fig2').append('<img width=100 src="static/figs/histcomplaints.png">');
+//                   Yhat = data.Actualvalue;
+                  Yhat = data.Expectedvalue;
+                  $("#predictbox").remove();
+                  $("#predictbox").append(Yhat);
+                  }
 
-                result_image = data.image;
-                $("#result_fig2").append("<img src=\"data:image/png;base64," + result_image + "\" height=\"412\" align=\"middle\">");
+//                 result_image = data.image;
+//                 $("#result_fig2").append("<img src=\"data:image/png;base64," + result_image + "\" height=\"412\" align=\"middle\">");
               }
             })
         }
