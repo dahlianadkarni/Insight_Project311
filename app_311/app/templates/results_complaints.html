@@ -49,8 +49,11 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="/">Home</a></li>
-            <li><a href="/predict">Predict volumes</a></li>
-            <li><a href="https://sites.google.com/site/dahlianadkarni/">About me</a></li>
+<!--             <li><a href="/predict">Predict volumes</a></li> -->
+             <li><a href="/visualize">Visualize</a></li>
+            <li><a href="https://rawgit.com/dahlianadkarni/Insight_Project311/master/Slides_311Complaints/index.html">Slides</a></li>
+            <li><a href="https://www.slideshare.net/slideshow/embed_code/38313625">More</a></li>
+           <li><a href="https://sites.google.com/site/dahlianadkarni/">About me</a></li>
 <!--             <li><a href="#contact">Contact</a></li> -->
           </ul>
         </div><!--/.nav-collapse -->
@@ -62,21 +65,46 @@
 
     <div class="container">
 
+<!-- 
       <div class="starter-template">
-        <h1>Top complaints </h1>
-        <p class="lead">Top problems in your region in order of importance since {{period_str}} <br> </p>
+<!~~         <h1></h1> ~~>
+        <p class="lead">Complaints by total volume {{period_str}} <br> </p>
       </div>
 
-    <table class="table table-hover">
+    <table class="table table-hover" align="center">
 
-    <tr><th>Complaint Type</th><th>Total Count</th><th>Priority </th></tr>
+    <tr><th>Complaint Type</th><th>Total Count</th></tr>
     
-    {% for complaint in topcomplaints %}
-    <tr><td>{{ complaint['complaint_type'] }}</td><td>{{ complaint['counts']}}</td><td>{{ complaint['increase'] }}</td></tr> 
-
-<!--     <tr><td>{{ complaint['complaint'] }}</td><td>{{ complaint['complaint_type']}}</td><td> {{ complaint['borough'] }}</td></tr> -->
+    {% for complaint1 in topcomplaints1 %}
+    <tr><td>{{ complaint1['complaint_type'] }}</td><td>{{ complaint1['counts']}}</td></tr> 
     {% endfor %}
     </table>
+ -->
+
+      <div class="starter-template">
+        <h1>High-priority complaints</h1>
+        <p class="lead">Top problems ranked by order of importance<br> </p>
+      </div>
+      
+    <table class="table table-hover">
+
+    <tr><th>Complaint Type</th><th>Total Count</th><th>Priority</th><th>Priority score</th></tr>
+    
+    {% for complaint in topcomplaints %}
+    <tr><td>{{ complaint['complaint_type'] }}</td><td>{{ complaint['counts']}}</td><td>{{ complaint['priority']}}</td><td>{{ complaint['zscore'] }}</td></tr> 
+    {% endfor %}
+    </table>
+   
+<!-- 
+      <div class="row-fluid">
+        <div class="span2">    
+            <img src={{pathfig}} width=\"50%\" align=\"middle\" style=\"padding-bottom: 30px\">   
+        </div>
+      </div> 
+ -->
+   
+    
+
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="static/dist/js/bootstrap.min.js"></script>
 
