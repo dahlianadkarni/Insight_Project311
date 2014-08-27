@@ -112,16 +112,10 @@ def my_linfit(X_train,Y_train, X_test, Y_test,timeindex,linregmodel1):
 
     Observed =  sum(Y_test)
     Expected = sum(Y_hat_test)
-    sigma_joint = (sum(sigma**2))**0.5
+    sigma_joint = (sum(sigma))
+#     sigma_joint = (sum(sigma**2))**0.5
     Z = (Observed-Expected)/sigma_joint
     
-#     if len(Y_test)>2:
-#         plot(timeindex,Y_test,'b')
-#         plot(timeindex,Y_hat_test,'r')
-#         plot(timeindex,(Y_hat_test.T+1.96*sigma).T,'r:')
-#         plot(timeindex,(Y_hat_test.T-1.96*sigma).T,'r:')
-#     pval = scipy.stats.norm.sf(Z)  
-#     return Z, pval
     return Z
     
 def my_gpfit(X_train,Y_train, X_test, Y_test,timeindex,gp):
@@ -139,17 +133,9 @@ def my_gpfit(X_train,Y_train, X_test, Y_test,timeindex,gp):
     
     Observed =  sum(Y_test)
     Expected = sum(Y_hat_test)
-    sigma_joint = (sum(sigma**2))**0.5
+    sigma_joint = (sum(sigma))
+#     sigma_joint = (sum(sigma**2))**0.5 %Independent assumption - wrong
     Z = (Observed-Expected)/sigma_joint
-
-#     if len(Y_test)>2:    
-#         plot(timeindex,Y_test,'b')
-#         plot(timeindex,Y_hat_test,'r')
-#         plot(timeindex,(Y_hat_test.T+1.96*sigma).T,'r:')
-#         plot(timeindex,(Y_hat_test.T-1.96*sigma).T,'r:')
-
-#     pval = scipy.stats.norm.sf(Z)    
-#     return Z,pval    
     return Z
 
 # def my_heatmap(loc):
@@ -181,15 +167,6 @@ def topcomplaint(borough,period):
     with db_test:
         query = "SELECT complaint_type,count(*) AS counts FROM " + dbtable + " WHERE created_date IS NOT NULL AND borough = '" + borough + "' GROUP BY complaint_type ORDER BY counts DESC  LIMIT 10;"
         topcomplaints_df = psql.read_sql(query, con=db_test)
-
-#     print complaints_df['complaint_type'][0]
-#     topcomplaints = []
-#     for i, result in enumerate(complaints_df.to_records(index=False)):
-#         if i > 10:
-#             break
-#         topcomplaints.append(dict(complaint_type=result[0], counts=result[1]))
-#     print topcomplaints
-#     print type(topcomplaints)
     return topcomplaints_df
     
 def get_zscore(borough,period,res):
@@ -201,24 +178,15 @@ def get_zscore(borough,period,res):
         table_test = 'complaints_recent'
         period_str = '2014-05-01'
         table_train = 'complaints3'
-    # startTime = datetime.now()
     
-    topcomplaints_df = topcomplaint(borough,period)
-
-    
-    # print(datetime.now()-startTime)
-    
+    topcomplaints_df = topcomplaint(borough,period)    
     topcomplaints = topcomplaints_df['complaint_type']
     listtopcomplaints = list(topcomplaints_df['complaint_type'])
-    
-    
+        
     mystring = "('" + "', '".join(listtopcomplaints) + "')"
-
-#     print(datetime.now()-startTime)
         
     TopN = len(listtopcomplaints) 
     Z = np.zeros(TopN)
-#     Z1 = np.zeros(TopN)
     for i in range(TopN):
         complaint_here = topcomplaints[i].replace('-','_').replace(' ','_').replace('\n','_').replace('*','').replace('(','').replace(')','').replace('/','_')
         filenametest = "311PKLData/"+borough + "_test" +str(period)+"_"+ complaint_here + ".pkl"
@@ -229,8 +197,6 @@ def get_zscore(borough,period,res):
         cv_test = cv_test.sort_index().resample(res,how=sum)
         cv_train = cv_train.sort_index().resample(res,how=sum)
               
-#         cv_test = datatest[datatest['complaint_type']==topcomplaints[i]].set_index('created_date').sort_index().resample(res,how=len)
-#         cv_train = datatrain[datatrain['complaint_type']==topcomplaints[i]].set_index('created_date').sort_index().resample(res,how=len)
         L = len(cv_test)
         cv = pd.concat([cv_train,cv_test])
         X = extract_features(cv.index,res)
@@ -242,37 +208,35 @@ def get_zscore(borough,period,res):
         
         if len(cv_train[(cv_train.index > '2011-05-01') & (cv_train.index < '2013-05-01')])<5:
             Z[i]=float('NaN')
-#             Z1[i]=float('NaN')
-#             pval[i]=float('NaN')
-#             pval2[i]=float('NaN')
             continue
         
         # # If you want to infer alpha for Ridge regression via cross validation
-#         linregmodel0 = linear_model.RidgeCV (alphas=[0.01, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0])
-#         linregmodel0.fit(X_train,Y_train)
-#         alp = linregmodel0.alpha_ 
-#         # alp = 0.5
+        linregmodel0 = linear_model.RidgeCV (alphas=[0.01, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0])
+        linregmodel0.fit(X_train,Y_train)
+        alp = linregmodel0.alpha_ 
+        # alp = 0.5
 # 
         # # Linear regression - OLS or Ridge or Lasso
 #         linregmodel = linear_model.LinearRegression()
 #         linregmodel = linear_model.Ridge (alpha = alp)
-        # linregmodel = linear_model.Lasso(alpha = 10)
+#         linregmodel = linear_model.Lasso(alpha = 10)
 # 
-#         Z1[i] = my_linfit(X_train,Y_train, X_test, Y_test, cv_test.index,linregmodel)
+#         Z[i] = my_linfit(X_train,Y_train, X_test, Y_test, cv_test.index,linregmodel)
 #          
         # # Gaussian Processes
         gp = gaussian_process.GaussianProcess(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
-        # # # OPtional noise feature
+        Z[i] = my_gpfit(X_train,Y_train, X_test, Y_test,timeindex,gp)
+        # # # Optional noise feature
+#         gp = gaussian_process.GaussianProcess(theta0=1e-2, thetaL=1e-4, thetaU=1e-1)
 #         y=Y_train
 #         dy = 0.5 + 1.0 * np.random.random(y.shape)
 #         noise = np.random.normal(0, dy)
 #         y += noise
-        Z[i] = my_gpfit(X_train,Y_train, X_test, Y_test,timeindex,gp)
-#         Z3[i] = my_gpfit(X_train,y, X_test, Y_test,timeindex,gp)
+#         Z[i] = my_gpfit(X_train,y, X_test, Y_test,timeindex,gp)
+
         # 
         # # # Different parameterization 
 #         gp = gaussian_process.GaussianProcess(corr='cubic', theta0=1e-2, thetaL=1e-4, thetaU=1e-1,random_start=100)
-#         y=Y_train
 #         Z[i] = my_gpfit(X_train,Y_train, X_test, Y_test,timeindex,gp)
         # 
 #     print(datetime.now()-startTime)

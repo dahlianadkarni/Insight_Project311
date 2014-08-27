@@ -16,7 +16,7 @@ from sklearn import preprocessing, linear_model
 # from sklearn.feature_extraction import DictVectorizer
 
 
-db_test = mdb.connect(user="root", host="localhost", passwd='dahlia',  db="db311_recent_2014", charset='utf8')
+#db_test = mdb.connect(user="root", host="localhost", passwd='dahlia',  db="db311_recent_2014", charset='utf8')
 
 @app.route('/')
 @app.route('/index')
@@ -57,9 +57,11 @@ def complaints_json_echo():
         elif result[2]>2:
             pr = "High"
         elif result[2]>1:
-            pr="Moderate"
+            pr="Medium"
         elif result[2]<0:
-            pr = "Complaints less than expected"
+            pr = "Complaint volume less than expected"
+        else:
+            pr = "Low"
         
 #         if i==0:
 #             temp = result[1]
@@ -67,7 +69,7 @@ def complaints_json_echo():
 #         else:
 #             if result[1]>temp:
 #                 maxcomplaint = result[0]        
-        topcomplaints.append(dict(complaint_type=result[0], counts=result[1], priority = pr,zscore = result[2]))
+        topcomplaints.append(dict(complaint_type=result[0], counts=result[1], priority = pr,zscore = '%0.2f' %(result[2])  ))
     
 #     print maxcomplaint
 #     complaint_here = maxcomplaint.replace('-','_').replace(' ','_').replace('\n','_').replace('*','').replace('(','').replace(')','').replace('/','_')
@@ -248,6 +250,7 @@ def visualize_result():
     complaint_type.replace(' ','_')
 #     print complaint_type
     return render_template("results_visualize.html",image = image, complaint_type = complaint_type)
+
 
        
 if __name__ == "__main__":

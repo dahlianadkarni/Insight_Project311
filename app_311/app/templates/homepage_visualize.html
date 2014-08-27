@@ -52,7 +52,7 @@
 <!--             <li><a href="/predict">Predict volumes</a></li> -->
             <li><a href="/visualize">Visualize</a></li>
             <li><a href="https://rawgit.com/dahlianadkarni/Insight_Project311/master/Slides_311Complaints/index.html">Slides</a></li>
-            <li><a href="https://www.slideshare.net/slideshow/embed_code/38313625">More</a></li>
+            <li><a href="http://www.slideshare.net/dale1486/demo-slides-38395525">More</a></li>
             <li><a href="https://sites.google.com/site/dahlianadkarni/">About me</a></li>
 <!--             <li><a href="#contact">Contact</a></li> -->
           </ul>
@@ -63,21 +63,24 @@
     <div class="container">
 
       <div class="starter-template">
-        <h1>Identifying high-priority complaints in your area</h1>
-        <p class="lead"><br>...</p>
+        <h1>Heat maps of top complaints in NYC</h1>
+        <p class="lead"><br></p>
       </div>
 
       <div>
           <form class="navbar-form" action="/visualize_result" method="GET">
-            Enter your Complaint Type:<br><br>
-                <input type="radio" name="complaint_type" value="Noise"> Noise<br>
-                <input type="radio" name="complaint_type" value="Heating"> Heating<br>
-                <input type="radio" name="complaint_type" value="Rodent"> Rodent<br>
-                <input type="radio" name="complaint_type" value="General_Construction"> General Construction<br>
-                <input type="radio" name="complaint_type" value="Sewer"> Sewer<br>
+            <font size=4>Enter your Complaint Type:</font>
+            <br><br>
+            <font size=3>
+                <input type="radio" name="complaint_type" value="Noise"> Noise<br><br>
+                <input type="radio" name="complaint_type" value="Heating"> Heating<br><br>
+                <input type="radio" name="complaint_type" value="Rodent"> Rodent<br><br>
+                <input type="radio" name="complaint_type" value="General_Construction"> General Construction<br><br>
+                <input type="radio" name="complaint_type" value="Sewer"> Sewer<br><br>
+            </font>
             <br>
 
-                <button type="submit" class="btn btn-small btn-warning ">See patterns</button>
+                <button type="submit" class="btn btn-small btn-warning ">Visualize Data</button>
                 <br>
              </form>
 
