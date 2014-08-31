@@ -13,20 +13,20 @@ import complaint311 as cp
 import math
 
 from sklearn import preprocessing, linear_model
-# from sklearn.feature_extraction import DictVectorizer
 
 
-#db_test = mdb.connect(user="root", host="localhost", passwd='dahlia',  db="db311_recent_2014", charset='utf8')
-
+#Homepage
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template('index_homepage_dahlia.html')   
 
-
+#Result of homepage query - ranked list of complaints
 @app.route("/result")
 def complaints_json_echo():
     borough = request.args.get('borough')
+    borough = borough.upper()
+    print borough
     period = int(request.args.get('period'))
     if period == 1:
         period_str = 'in the last month'
@@ -34,16 +34,6 @@ def complaints_json_echo():
     else:
         period_str = 'in last 3 months'
         dbtable = 'complaints_recent'
-
-#     with db_test:
-#         query = "SELECT complaint_type,count(*) AS counts,agency FROM " + dbtable + " WHERE borough = '" + borough + "' GROUP BY complaint_type ORDER BY counts DESC  LIMIT 5;"
-#         complaints1_df = psql.read_sql(query, con=db_test)
-#     topcomplaints1 = []
-#     for i, result in enumerate(complaints1_df.to_records(index=False)):
-#         if i >= 5:
-#             break
-#         topcomplaints1.append(dict(complaint_type=result[0], counts=result[1], increase = result[2]))
-
 
     complaints_df = cp.get_zscore(borough,np.int(period),'M')
     complaints_df = complaints_df.sort(['Z-Score'],ascending=False)    
@@ -69,14 +59,15 @@ def complaints_json_echo():
 #         else:
 #             if result[1]>temp:
 #                 maxcomplaint = result[0]        
-        topcomplaints.append(dict(complaint_type=result[0], counts=result[1], priority = pr,zscore = '%0.2f' %(result[2])  ))
+        s = result[0][:1]+result[0][1:].lower()
+        topcomplaints.append(dict(complaint_type=s, counts=result[1], priority = pr,zscore = '%0.2f' %(result[2])  ))
     
 #     print maxcomplaint
 #     complaint_here = maxcomplaint.replace('-','_').replace(' ','_').replace('\n','_').replace('*','').replace('(','').replace(')','').replace('/','_')
 #     filenametest = "311PKLData/"+borough + "_test" +str(period)+"_"+ complaint_here + ".pkl"
-#     cv_test = pd.load(filenametest)
+#     cv_test = pd.read_pickle(filenametest)
 #     filenametrain = "311PKLData/"+borough + "_train"+str(period)+"_" + complaint_here + ".pkl"
-#     cv_train = pd.load(filenametrain)  
+#     cv_train = pd.read_pickle(filenametrain)  
 #     cv_test = cv_test.sort_index().resample('2W',how=sum)
 #     cv_train = cv_train.sort_index().resample('2W',how=sum)
 #     cv = pd.concat([cv_train,cv_test])
@@ -88,9 +79,9 @@ def complaints_json_echo():
 #     print maxcomplaint
 #     complaint_here = maxcomplaint.replace('-','_').replace(' ','_').replace('\n','_').replace('*','').replace('(','').replace(')','').replace('/','_')
 #     filenametest = "311PKLData/"+borough + "_test" +str(period)+"_"+ complaint_here + ".pkl"
-#     cv_test = pd.load(filenametest)
+#     cv_test = pd.read_pickle(filenametest)
 #     filenametrain = "311PKLData/"+borough + "_train"+str(period)+"_" + complaint_here + ".pkl"
-#     cv_train = pd.load(filenametrain)  
+#     cv_train = pd.read_pickle(filenametrain)  
 #     cv_test = cv_test.sort_index().resample('2W',how=sum)
 #     cv_train = cv_train.sort_index().resample('2W',how=sum)
 #     cv = pd.concat([cv_train,cv_test])
@@ -107,8 +98,67 @@ def complaints_json_echo():
 #     return render_template("results_complaints.html", topcomplaints=topcomplaints, period_str = period_str, pathfig = pathfig)
 #     return render_template("results_complaints.html", topcomplaints=topcomplaints,topcomplaints1=topcomplaints1, period_str = period_str)
     
-#     
-#     
+
+# Visualize homepage
+@app.route('/visualize')
+def visualize():
+    return render_template('homepage_visualize.html')   
+
+# Heatmap for a given complaint
+def my_heatmap_vis(loc):
+    lat = loc['latitude'].values
+    lon = loc['longitude'].values
+    x=lon
+    y=lat
+    # plt.hist2d(x, y, bins=80, cmap='Greys', norm=LogNorm())
+#     plt.hist2d(x, y, bins=100, norm=LogNorm())
+    plt.hexbin(x, y, gridsize=80,norm=LogNorm())
+    path = "static/tempfig.png"
+    plt.savefig(path, dpi=2500)
+    return path
+
+
+# result of visualization
+@app.route("/visualize_result")
+def visualize_result():
+    complaint_type = request.args.get('complaint_type')
+#     period = int(request.args.get('period'))
+#     if period == 1:
+#         period_str = 'in the last month'
+#         dbtable = 'complaints_201407'
+#     else:
+#         period_str = 'in last 3 months'
+#         dbtable = 'complaints_recent'
+#     print dbtable
+#     print period
+#     with db_test:
+#         query = "SELECT latitude,longitude FROM " + dbtable + " WHERE complaint_type = '" + complaint_type + "';"
+#         complaints_df = psql.read_sql(query, con=db_test)
+#     loc = complaints_df[['latitude','longitude']].dropna()
+#     print loc.head()
+#     path = my_heatmap_vis(loc)
+#     image = path
+    image = "static/"+complaint_type+".png"
+    complaint_type.replace(' ','_')
+#     print complaint_type
+    return render_template("results_visualize.html",image = image, complaint_type = complaint_type)
+
+
+def print_hist(topcomplaintscount_df):
+    topcomplaintscount_df[:10].plot(kind='barh',legend=False)
+    # plt.subplots(1, 1, sharex=True, figsize=(8, 6))
+#     for y in set(df.discharge_year):
+#         ax = np.log(df.total_charges[df.discharge_year==y]).plot(kind='kde',
+#                                                                  legend=True,
+#                                                                  label=y)
+#     ax.set_xlabel('Log-Total Charges')
+
+    io = StringIO()
+    plt.savefig(io, format='png', dpi=150)
+    return io.getvalue().encode('base64')
+    
+    
+    # Predict functions
 # @app.route("/predict")
 # def predict_home():
 #     return render_template('predict_homepage.html') 
@@ -123,9 +173,9 @@ def complaints_json_echo():
 #     db_train = db_train3
 #     complaint_type = complaint_type.replace('-','_').replace(' ','_').replace('\n','_').replace('*','').replace('(','').replace(')','').replace('/','_')
 #     filenametest = "311PKLData/"+borough_predict + "_test" +str(period)+"_"+ complaint_here + ".pkl"
-#     cv_test = pd.load(filenametest)
+#     cv_test = pd.read_pickle(filenametest)
 #     filenametrain = "311PKLData/"+borough_predict + "_train"+str(period)+"_" + complaint_here + ".pkl"
-#     cv_train = pd.load(filenametrain)  
+#     cv_train = pd.read_pickle(filenametrain)  
 #     res = W
 #     cv_test = cv_test.sort_index().resample(res,how=sum)
 #     cv_train = cv_train.sort_index().resample(res,how=sum)              
@@ -193,65 +243,6 @@ def complaints_json_echo():
 # 
 #     return render_template("results_predict.html", complaints=complaints)
 # 
-
-@app.route('/visualize')
-def visualize():
-    return render_template('homepage_visualize.html')   
-
-
-
-def print_hist(topcomplaintscount_df):
-    topcomplaintscount_df[:10].plot(kind='barh',legend=False)
-    # plt.subplots(1, 1, sharex=True, figsize=(8, 6))
-#     for y in set(df.discharge_year):
-#         ax = np.log(df.total_charges[df.discharge_year==y]).plot(kind='kde',
-#                                                                  legend=True,
-#                                                                  label=y)
-#     ax.set_xlabel('Log-Total Charges')
-
-    io = StringIO()
-    plt.savefig(io, format='png', dpi=150)
-    return io.getvalue().encode('base64')
-
-def my_heatmap_vis(loc):
-    lat = loc['latitude'].values
-    lon = loc['longitude'].values
-    x=lon
-    y=lat
-    # plt.hist2d(x, y, bins=80, cmap='Greys', norm=LogNorm())
-#     plt.hist2d(x, y, bins=100, norm=LogNorm())
-    plt.hexbin(x, y, gridsize=80,norm=LogNorm())
-    path = "static/tempfig.png"
-    plt.savefig(path, dpi=2500)
-    return path
-
-
-        
-@app.route("/visualize_result")
-def visualize_result():
-    complaint_type = request.args.get('complaint_type')
-#     period = int(request.args.get('period'))
-#     if period == 1:
-#         period_str = 'in the last month'
-#         dbtable = 'complaints_201407'
-#     else:
-#         period_str = 'in last 3 months'
-#         dbtable = 'complaints_recent'
-#     print dbtable
-#     print period
-#     with db_test:
-#         query = "SELECT latitude,longitude FROM " + dbtable + " WHERE complaint_type = '" + complaint_type + "';"
-#         complaints_df = psql.read_sql(query, con=db_test)
-#     loc = complaints_df[['latitude','longitude']].dropna()
-#     print loc.head()
-#     path = my_heatmap_vis(loc)
-#     image = path
-    image = "static/"+complaint_type+".png"
-    complaint_type.replace(' ','_')
-#     print complaint_type
-    return render_template("results_visualize.html",image = image, complaint_type = complaint_type)
-
-
        
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port = 5000) 

@@ -51,9 +51,9 @@
             <li class="active"><a href="/">Home</a></li>
 <!--             <li><a href="/predict">Predict volumes</a></li> -->
             <li><a href="/visualize">Visualize</a></li>
-            <li><a href="https://rawgit.com/dahlianadkarni/Insight_Project311/master/Slides_311Complaints/index.html">Slides</a></li>
+            <li><a href="http://rawgit.com/dahlianadkarni/Insight_Project311/master/Demo_slides/index.html">Slides</a></li>
             <li><a href="http://www.slideshare.net/dale1486/demo-slides-38395525">More</a></li>
-            <li><a href="https://sites.google.com/site/dahlianadkarni/">About me</a></li>
+            <li><a href="http://sites.google.com/site/dahlianadkarni/">About Me</a></li>
 <!--             <li><a href="#contact">Contact</a></li> -->
           </ul>
         </div><!--/.nav-collapse -->
@@ -71,7 +71,15 @@
           <form class="navbar-form text-center" action="/result" method="GET">
             <font size = 4>  Enter your borough:</font>
             <br><br>
-            <input class="form-control" type="text" name="borough" id='borough' size='60' placeholder="BRONX" value = "BRONX" >
+<!--             <input class="form-control" type="text" name="borough" id='borough' size='60' placeholder="BRONX" value = "BRONX" > -->
+
+            <select name="borough" style='font-size: 12pt;'>
+            <option value="BRONX">Bronx</option>
+            <option value="BROOKLYN">Brooklyn</option>
+            <option value="MANHATTAN">Manhattan</option>
+            <option value="QUEENS">Queens</option>
+            <option value="STATEN ISLAND">Staten Island</option>
+            </select>
 
             <br><br><br><br>
             <font size = 4> Pick a time period to focus on:</font>
