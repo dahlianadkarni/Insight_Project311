@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Locality Lookout</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/starter-template.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+       
+  <body>
+<!-- 
+    <style type="text/css">
+      body { background-image: url(static/figs/NoiseStudy_small.jpg);
+        background-size: 1500px 900px;
+/*       background-repeat:no-repeatdisplay:compact; */
+      }
+    </style>
+ -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+<!--           <a class="brand" ><img STYLE="position:absolute; TOP:115px; LEFT:50px; WIDTH:220px; HEIGHT:35px" src="/static/figs/311pic.jpg" ></a> -->
+
+
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+<!--           <a class="navbar-brand" href="#">Locality Lookout</a> -->
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+<!--             <li><a href="/predict">Predict volumes</a></li> -->
+            <li><a href="/visualize">Visualize</a></li>
+            <li><a href="http://www.slideshare.net/slideshow/embed_code/38576569">Slides</a></li>
+            <li><a href="http://rawgit.com/dahlianadkarni/Insight_Project311/master/Wk_6/index.html">More</a></li>
+            <li><a href="http://sites.google.com/site/dahlianadkarni/">About Me</a></li>
+<!--             <li><a href="#contact">Contact</a></li> -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>Identify high-priority complaints in your NYC locale</h1>
+        <p class="lead"><br></p>
+      </div>
+
+      <div>
+          <form class="navbar-form text-center" action="/result" method="GET">
+            <font size = 4>  Enter your borough:</font>
+            <br><br>
+<!--             <input class="form-control" type="text" name="borough" id='borough' size='60' placeholder="BRONX" value = "BRONX" > -->
+
+            <select name="borough" style='font-size: 12pt;'>
+            <option value="BRONX">Bronx</option>
+            <option value="BROOKLYN">Brooklyn</option>
+            <option value="MANHATTAN">Manhattan</option>
+            <option value="QUEENS">Queens</option>
+            <option value="STATEN ISLAND">Staten Island</option>
+            </select>
+
+            <br><br><br><br>
+            <font size = 4>  Enter your Community Board Number:</font>
+            <br><br>
+<!--             <input class="form-control" type="text" name="cb" id='cb' size='2'  placeholder="1" value="1"> -->
+            <select name="cb" style='font-size: 12pt;'>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+                <option value=8>8</option>
+                <option value=9>9</option>
+                <option value=10>10</option>
+                <option value=11>11</option>
+                <option value=12>12</option>
+                <option value=13>13</option>
+                <option value=14>14</option>
+                <option value=15>15</option>
+                <option value=16>16</option>
+                <option value=17>17</option>
+                <option value=18>18</option>
+                <option value=100>All</option>
+            </select>
+
+            <br><br><br><br>
+            <font size = 4> Pick a time period to focus on:</font>
+            <br><br>
+
+<!-- 
+            <font size = 3> Last </font>
+            <select name="period" style='font-size: 12pt;'>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+                <option value=6>6</option>
+            </select>
+            <font size = 3> month(s) </font>
+ -->
+            
+            <input type="radio" name="period" value="1"> <font size = 3> Last 1 month</font>
+<!--             <br> -->
+<!--             <input type="radio" name="period" value="2" > <font size = 3> Last 2 months</font> -->
+            <br>
+            <input type="radio" name="period" value="3" checked > <font size = 3> Last 3 months</font>
+<!--             <br> -->
+<!--             <input type="radio" name="period" value="4" > <font size = 3> Last 4 months</font> -->
+<!--             <br> -->
+<!--             <input type="radio" name="period" value="5" > <font size = 3> Last 5 months</font> -->
+            <br>
+            <input type="radio" name="period" value="6" > <font size = 3> Last 6 months</font>
+            <br><br>
+
+         
+            <br><br>
+            <button type="submit" class="btn btn-small btn-warning ">View top complaints by priority
+            </button>
+            <br>
+          </form>
+
+            <br>
+      </div>
+      
+
+<!-- 
+      <div id="top_complaints_table">
+          <!~~ <strong><div id='echoResult'></div></strong> ~~>
+          <table class="table table-hover">
+          </table>
+      </div>      
+
+      <div id="result_fig">
+      </div>
+ -->
+
+    </div><!-- /.container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!--     <script src="static/js/jquery.js"></script> -->
+    <script src="static/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
+
+            
